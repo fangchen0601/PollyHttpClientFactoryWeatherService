@@ -18,11 +18,19 @@ namespace TemperatureService.Controllers
         {
             _getCounter++;
 
-            if (_getCounter % 4 == 0) // only one out of four requests will succeed
+            if(_getCounter % 4 == 1) //1, 5, 9...
             {
+                return StatusCode((int)HttpStatusCode.ServiceUnavailable, "ServiceUnavailable 503 when getting the temperature.");
+            } else if(_getCounter % 4 == 2) //2, 6, 10...
+            {
+                return StatusCode((int)HttpStatusCode.BadGateway, "BadGateway 502 when getting the temperature.");
+            } else if(_getCounter % 4 == 3) //3, 7, 11...
+            {
+                return StatusCode((int)HttpStatusCode.GatewayTimeout, "BadGateway 504 when getting the temperature.");
+            } else
+            { 
                 return Ok(randomTemperature.Next(0, 120));
             }
-            return StatusCode((int)HttpStatusCode.InternalServerError, "Something went wrong when getting the temperature.");
         }
 
         [HttpPost]

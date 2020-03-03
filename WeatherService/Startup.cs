@@ -47,20 +47,7 @@ namespace WeatherService
             {
                 client.BaseAddress = new Uri("http://localhost:6001/");
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
-            }).AddPolicyHandler(httpRequestMessage =>
-            {
-                if (httpRequestMessage.Method == HttpMethod.Get)
-                {
-                    return httpWaitAndRetryPolicy;
-                }
-
-                if (httpRequestMessage.Method == HttpMethod.Post)
-                {
-                    return noOpPolicy;
-                }
-
-                return httpRetryPolicy;
-            });
+            }).AddPolicyHandler(PollyPolicy.HttpWaitAndRetryPolicy);
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
