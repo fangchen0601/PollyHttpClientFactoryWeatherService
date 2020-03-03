@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using Polly;
+using WeatherService.services;
 
 namespace WeatherService
 {
@@ -43,7 +44,29 @@ namespace WeatherService
             };
             services.AddSingleton<HttpClient>(httpClient);
             */
+
+            /*
             services.AddHttpClient("TemperatureService", client=>
+            {
+                client.BaseAddress = new Uri("http://localhost:6001/");
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+            }).AddPolicyHandler(httpRequestMessage =>
+            {
+                if (httpRequestMessage.Method == HttpMethod.Get)
+                {
+                    return httpWaitAndRetryPolicy;
+                }
+
+                if (httpRequestMessage.Method == HttpMethod.Post)
+                {
+                    return noOpPolicy;
+                }
+
+                return httpRetryPolicy;
+            });
+            */
+
+            services.AddHttpClient<ITemperatureClient, TemperatureClient>(client =>
             {
                 client.BaseAddress = new Uri("http://localhost:6001/");
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
