@@ -6,12 +6,14 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using WeatherService.Models.Outgoing;
 using Newtonsoft.Json;
+using Microsoft.Extensions.Logging;
 
 namespace WeatherService.services
 {
     public class TemperatureClient : ITemperatureClient
     {
         private readonly HttpClient _client;
+        private readonly ILogger<ITemperatureClient> _logger;
 
         public TemperatureClient(HttpClient httpClient)
         {

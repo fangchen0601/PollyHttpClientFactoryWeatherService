@@ -66,24 +66,8 @@ namespace WeatherService
             });
             */
 
-            services.AddHttpClient<ITemperatureClient, TemperatureClient>(client =>
-            {
-                client.BaseAddress = new Uri("http://localhost:6001/");
-                client.DefaultRequestHeaders.Add("Accept", "application/json");
-            }).AddPolicyHandler(httpRequestMessage =>
-            {
-                if (httpRequestMessage.Method == HttpMethod.Get)
-                {
-                    return httpWaitAndRetryPolicy;
-                }
+            services.AddMessageClient(Configuration.GetSection("MessagingClient"));
 
-                if (httpRequestMessage.Method == HttpMethod.Post)
-                {
-                    return noOpPolicy;
-                }
-
-                return httpRetryPolicy;
-            });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
